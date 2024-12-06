@@ -1,0 +1,264 @@
+/* Global Dark Theme Overrides */
+html, body {
+    background-color: #121212 !important;
+    color: white !important;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Enhanced Button Styles */
+.click-button {
+    background-color: #1ED760; /* Spotify green */
+    color: white;
+    font-family: 'Circular', 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px; /* Rounded corners */
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    /* Gradient overlay */
+    background-image: linear-gradient(to right, #1ED760 0%, #1DB954 50%, #14ab4a 100%);
+    background-size: 200% auto;
+
+    /* Subtle shadow for depth */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), inset 0 -2px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Button hover effect */
+.click-button:hover {
+    transform: scale(1.07);
+    background-position: right center;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25), inset 0 -3px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Button press effect */
+.click-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Button glow hover effect */
+.click-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s;
+}
+
+.click-button:hover::before {
+    left: 100%;
+}
+
+/* Glitchy Transition Class */
+.glitch-transition {
+    background-color: black;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out, filter 0.1s ease-in-out;
+    animation: glitch-animation 1.5s steps(10) infinite;
+  }
+  
+  /* Keyframes for Glitch Effect */
+  @keyframes glitch-animation {
+    0% {
+      transform: scale(1) rotate(0deg);
+      filter: contrast(100%) brightness(100%);
+    }
+    10% {
+      transform: scale(1.05) rotate(2deg) skew(2deg, -1deg);
+      filter: contrast(150%) brightness(120%);
+    }
+    20% {
+      transform: scale(0.95) rotate(-2deg) skew(-2deg, 2deg);
+      filter: contrast(200%) brightness(140%);
+    }
+    30% {
+      transform: scale(1.02) rotate(1deg);
+      filter: contrast(250%) brightness(160%);
+    }
+    40% {
+      transform: scale(0.98) rotate(-1deg) skew(1deg, -2deg);
+      filter: contrast(300%) brightness(180%);
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      filter: contrast(100%) brightness(100%);
+    }
+  }
+  
+/* Custom Dropdown Styles */
+.custom-dropdown .Select-control {
+    background: linear-gradient(135deg, #1DB954, #1ED760);
+    color: white;
+    border: 2px solid black; /* Black border */
+    border-radius: 15px; /* Curved edges */
+    height: 60px; /* Larger dropdown height */
+    transition: all 0.4s ease;
+
+    /* Subtle shadow */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Dropdown focused/expanded state */
+.custom-dropdown .Select-control.is-open {
+    border-color: black; /* Maintain black border when focused */
+    box-shadow: none; /* Remove additional shadow */
+}
+
+/* Dropdown menu container */
+.custom-dropdown .Select-menu-outer {
+    background: linear-gradient(to bottom, #181818 0%, #121212 100%);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px; /* Add padding for options */
+    max-height: 300px; /* Limit height for scrollable menu */
+    overflow-y: auto; /* Enable scrolling */
+    animation: dropdownReveal 0.4s ease-in-out;
+}
+
+/* Dropdown reveal animation */
+@keyframes dropdownReveal {
+    from {
+        opacity: 0;
+        transform: scaleY(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+/* Enhanced Dropdown Styles */
+.custom-dropdown .Select-control {
+    background: linear-gradient(135deg, #1DB954, #1ED760);
+    color: white;
+    border: 2px solid black; /* Black border */
+    border-radius: 15px; /* Curved edges */
+    height: 60px; /* Larger dropdown height */
+    transition: all 0.4s ease;
+
+    /* Subtle shadow */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Dropdown focused/expanded state */
+.custom-dropdown .Select-control.is-open {
+    border-color: black; /* Maintain black border when focused */
+    box-shadow: none; /* Remove additional shadow */
+}
+
+/* Dropdown menu container */
+.custom-dropdown .Select-menu-outer {
+    background: linear-gradient(to bottom, #181818 0%, #121212 100%);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px; /* Add padding for options */
+    max-height: 300px; /* Limit height for scrollable menu */
+    overflow-y: auto; /* Enable scrolling */
+    animation: dropdownReveal 0.4s ease-in-out;
+}
+
+/* Dropdown reveal animation */
+@keyframes dropdownReveal {
+    from {
+        opacity: 0;
+        transform: scaleY(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+/* Dropdown options */
+.custom-dropdown .Select-option {
+    background-color: #121212; /* Dark background */
+    color: white; /* Contrast text */
+    padding: 16px 20px; /* Larger padding for spacing */
+    font-size: 16px; /* Larger text size */
+    text-align: left; /* Align text to the left */
+    border-radius: 5px; /* Slightly rounded corners */
+    transition: all 0.3s ease;
+    margin-bottom: 8px; /* Space between options */
+}
+
+/* Hover effect for options */
+.custom-dropdown .Select-option:hover {
+    background-color: #1ED760; /* Spotify green */
+    color: black; /* High contrast text */
+    transform: scale(1.02);
+}
+
+/* Highlight selected option */
+.custom-dropdown .Select-option.is-selected {
+    background-color: #1ED760;
+    color: black;
+    font-weight: bold;
+}
+
+/* Scrollbar customization */
+.custom-dropdown .Select-menu-outer::-webkit-scrollbar {
+    width: 10px;
+    background: #121212; /* Dark track */
+}
+
+.custom-dropdown .Select-menu-outer::-webkit-scrollbar-thumb {
+    background: #1ED760; /* Green scrollbar thumb */
+    border-radius: 10px;
+}
+
+/* Adjust placeholder text */
+.custom-dropdown .Select-placeholder {
+    color: white;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Selected value in dropdown */
+.custom-dropdown .Select-value {
+    color: white;
+    text-align: left;
+    padding: 5px 10px;
+    font-weight: bold;
+}
+
+/* Custom styles for the dropdown clear "x" and caret icon */
+.custom-dropdown .Select-clear-zone {
+    color: black !important;
+    cursor: pointer;
+}
+
+.custom-dropdown .Select-arrow-zone {
+    color: black !important;
+}
+
+.custom-dropdown .Select-arrow {
+    border-top-color: black !important;
+    border-bottom-color: transparent !important;
+}
+
+/* Hover effect for icons */
+.custom-dropdown .Select-clear-zone:hover,
+.custom-dropdown .Select-arrow-zone:hover {
+    color: #1ED760;
+}
