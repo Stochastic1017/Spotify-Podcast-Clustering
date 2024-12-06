@@ -1,12 +1,27 @@
+
 from dash import html, dcc, Input, Output, callback
+from dotenv import load_dotenv
+import os
+import json
 import dash
 import pandas as pd
+from google.oauth2 import service_account
 from helpers.word_cloud import generate_word_cloud
+
+# Environment Variables
+load_dotenv()
+
+credentials_info = os.getenv("GOOGLE_AUTH")
+credentials = service_account.Credentials.from_service_account_info(json.loads(credentials_info),
+                                                                    scopes=['https://www.googleapis.com/auth/devstorage.read_write',
+                                                                            'https://www.googleapis.com/auth/cloud-platform',
+                                                                            'https://www.googleapis.com/auth/drive'])
 
 dash.register_page(__name__, path="/main")
 
 # Load the podcast data
-podcast_data = pd.read_csv("data/cleaned_podcast_details.csv")
+podcast_data =  pd.read_csv(f"gs://spotify-podcast-cluster/cleaned_podcast_details.csv", storage_options={"token": credentials})
+print(podcast_data)
 
 # Extract relevant fields and sort options
 podcast_options = sorted(
