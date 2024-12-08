@@ -25,7 +25,7 @@ layout = html.Div(
         # Video Element
         html.Video(
             id="intro-video",
-            src='/assets/SpotifyLogo.mp4',
+            src="https://github.com/Stochastic1017/Spotify-Podcast-Clustering/raw/refs/heads/main/dash_app/assets/SpotifyLogo.mp4",
             autoPlay=True,
             controls=False,
             loop=False,

@@ -48,7 +48,7 @@ layout = html.Div(
             children=[
                 # Spotify Logo
                 html.Img(
-                    src="/assets/SpotifyLogo.png",
+                    src="https://raw.githubusercontent.com/Stochastic1017/Spotify-Podcast-Clustering/refs/heads/main/dash_app/assets/SpotifyLogo.png",
                     alt="Spotify Logo",
                     style={
                         'width': '250px',
@@ -62,7 +62,7 @@ layout = html.Div(
                     placeholder="Search for a podcast...",
                     style={
                         'width': '300px',
-                        'height': '40px',
+                        'height': '50px',
                         'backgroundColor': '#282828',
                         'color': '#1DB954',
                         'borderRadius': '20px',
@@ -257,6 +257,6 @@ def update_podcast_details(selected_podcast):
 )
 def update_scatter_plot(selected_podcast_id):
     if not selected_podcast_id:
-        return html.Div("Please select a podcast to view the scatter plot.")
+        return
 
     return dcc.Graph(figure=generate_plot(selected_podcast_id))

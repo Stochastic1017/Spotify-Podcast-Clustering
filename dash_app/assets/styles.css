@@ -134,6 +134,7 @@ html, body {
     max-height: 300px; /* Limit height for scrollable menu */
     overflow-y: auto; /* Enable scrolling */
     animation: dropdownReveal 0.4s ease-in-out;
+    font-size: 16px;
 }
 
 /* Dropdown reveal animation */
@@ -176,6 +177,7 @@ html, body {
     max-height: 300px; /* Limit height for scrollable menu */
     overflow-y: auto; /* Enable scrolling */
     animation: dropdownReveal 0.4s ease-in-out;
+    font-size: 16px;
 }
 
 /* Dropdown reveal animation */

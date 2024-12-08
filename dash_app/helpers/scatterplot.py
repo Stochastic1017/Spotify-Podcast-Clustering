@@ -60,7 +60,6 @@ def generate_plot(selected_podcast_id):
 
     # Merge with metadata for hover data
     plot_data = plot_data.merge(podcast_metadata, on='podcast_id', how='left')
-    print(plot_data)
 
     # Sort by distance to find closest podcasts
     closest_podcasts = plot_data.nsmallest(5, 'distance')
