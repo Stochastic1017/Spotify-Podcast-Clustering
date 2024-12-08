@@ -1,11 +1,10 @@
-
 import dash
 from dash import dcc, html
 
 # Create the Dash app
 app = dash.Dash(
     __name__,
-    use_pages=True,
+    use_pages=True,  # Enables multi-page support
     suppress_callback_exceptions=True
 )
 
@@ -18,4 +17,4 @@ app.layout = html.Div(
 )
 
 if __name__ == "__main__":
-    app.run_server(debug=True, dev_tools_silence_routes_logging=False, dev_tools_hot_reload=False)
+    app.run_server(debug=True)
