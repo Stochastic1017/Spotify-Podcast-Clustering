@@ -12,11 +12,7 @@ dask==2024.10.0
 dask-expr==1.1.16
 dask-glm==0.3.2
 dask-ml==2024.4.4
-python-dotenv==1.0.1
-gcsfs==2024.10.0
 numpy==1.26.4
 pandas==2.1.4
 plotly==5.15.0
-pytz==2024.1
 requests==2.31.0
-scipy==1.11.4
