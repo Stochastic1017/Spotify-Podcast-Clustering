@@ -7,7 +7,7 @@ from multiprocessing import Pool, cpu_count, Manager
 from functools import partial
 from clean_description import PodcastDescriptionCleaner
 
-def process_single_row(row, error_counter, desc_column='description', podcast_id_column='podcast_id'):
+def process_single_row(row, error_counter, desc_column='episode_description', podcast_id_column='podcast_id'):
     """
     Process a single row and return tokenized word counts.
     

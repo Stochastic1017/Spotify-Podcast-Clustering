@@ -4,8 +4,8 @@ import pandas as pd
 
 # Paths
 podcast_tokens_folder = "podcast_tokens/"
-podcast_details_file = "data/podcast_details.csv"
-output_file = "data/cleaned_podcast_details.csv"
+podcast_details_file = "podcast_details_english_colors.csv"
+output_file = "cleaned_podcast_details_english_colors.csv"
 
 # Step 1: Get the list of podcast IDs from the podcast_tokens folder
 podcast_ids = [

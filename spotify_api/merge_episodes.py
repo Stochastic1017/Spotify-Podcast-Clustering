@@ -1,94 +1,46 @@
 import os
 import pandas as pd
 
-def merge_all_csv_in_directory(base_directory):
+def merge_csv_files_in_directory(directory, output_file):
     """
-    Recursively merges all CSV files in a directory and its subdirectories into a single DataFrame.
-    
+    Recursively traverse a directory and merge all CSV files into one large file.
+
     Parameters:
-        base_directory (str): The root directory to start the search.
-        
+    - directory (str): The root directory to search for CSV files.
+    - output_file (str): The path for the output CSV file.
+
     Returns:
-        pd.DataFrame: Merged DataFrame containing all CSV data from the directory.
+    None
     """
-    all_csv_files = []
+    # List to store valid dataframes
+    csv_data = []
     
-    # Walk through the directory and subdirectories to find CSV files
-    for root, _, files in os.walk(base_directory):
+    # Walk through directory and its subdirectories
+    for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith('.csv'):
-                all_csv_files.append(os.path.join(root, file))
+            if file.endswith(".csv"):  # Check if the file is a CSV
+                file_path = os.path.join(root, file)
+                print(f"Processing file: {file_path}")
+                try:
+                    # Read CSV into a dataframe
+                    df = pd.read_csv(file_path)
+                    # Check if the DataFrame is empty or all columns are NaN
+                    if not df.empty and not df.isna().all(axis=None):
+                        csv_data.append(df)
+                    else:
+                        print(f"Skipping empty or all-NaN file: {file_path}")
+                except Exception as e:
+                    print(f"Error reading {file_path}: {e}")
     
-    # Merge all CSV files
-    merged_data = pd.DataFrame()
-    for csv_file in all_csv_files:
-        try:
-            print(f"Reading {csv_file}...")
-            data = pd.read_csv(csv_file)
-            merged_data = pd.concat([merged_data, data], ignore_index=True)
-        except Exception as e:
-            print(f"Error reading {csv_file}: {e}")
-    
-    return merged_data
+    # Concatenate all valid dataframes into one
+    if csv_data:
+        merged_df = pd.concat(csv_data, ignore_index=True)
+        merged_df[~merged_df['episode_language'].isin(['cs', 'ja', 'es-MX', 'es-ES', 'es'])].to_csv(output_file, index=False)
+        print(f"All files merged into: {output_file}")
+    else:
+        print("No valid CSV files found.")
 
-def combine_podcast_data(top_podcasts_file, podcast_details_file, base_directory, output_file):
-    """
-    Combines top podcasts, podcast details, and episode information into one file.
-    
-    Parameters:
-        top_podcasts_file (str): Path to the top_podcasts.csv file.
-        podcast_details_file (str): Path to the podcast_details.csv file.
-        base_directory (str): Directory containing genre-wise episode details.
-        output_file (str): Path to save the combined file.
-    """
-    try:
-        # Load top_podcasts.csv
-        print("Loading top_podcasts.csv...")
-        top_podcasts = pd.read_csv(top_podcasts_file)
-        
-        # Load podcast_details.csv
-        print("Loading podcast_details.csv...")
-        podcast_details = pd.read_csv(podcast_details_file)
-        
-        # Normalize columns for consistent matching
-        top_podcasts["Podcast"] = top_podcasts["Podcast"].str.strip().str.lower()
-        podcast_details["name"] = podcast_details["name"].str.strip().str.lower()
-        
-        # Merge top_podcasts and podcast_details on matching columns
-        print("Merging top_podcasts with podcast_details...")
-        merged_podcasts = pd.merge(
-            top_podcasts, podcast_details,
-            left_on="Podcast", right_on="name",
-            how="left"
-        )
-        
-        # Load and merge all episode-level data
-        print("Merging episode data from genre directories...")
-        episodes_data = merge_all_csv_in_directory(base_directory)
-        
-        # Merge episode data with the combined podcast data
-        print("Combining podcast and episode data...")
-        combined_data = pd.merge(
-            episodes_data,
-            merged_podcasts,
-            left_on="podcast_name",
-            right_on="Podcast",
-            how="left"
-        )
-        
-        # Save the final combined data to the output file
-        print(f"Saving combined data to {output_file}...")
-        combined_data.to_csv(output_file, index=False)
-        print(f"Successfully saved combined data to {output_file}")
-    
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-if __name__ == "__main__":
-    # Update these paths accordingly
-    TOP_PODCASTS_FILE = "top_podcasts.csv"
-    PODCAST_DETAILS_FILE = "podcast_details.csv"
-    BASE_DIRECTORY = "podcasts/"  # Genre-based directories
-    OUTPUT_FILE = "combined_podcast_data.csv"
-    
-    combine_podcast_data(TOP_PODCASTS_FILE, PODCAST_DETAILS_FILE, BASE_DIRECTORY, OUTPUT_FILE)
+# Example usage
+directory_path = "podcasts/"
+output_csv_file = "combined_episodes.csv"
+merge_csv_files_in_directory(directory_path, output_csv_file)

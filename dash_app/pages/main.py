@@ -20,8 +20,7 @@ credentials = service_account.Credentials.from_service_account_info(json.loads(c
 dash.register_page(__name__, path="/main")
 
 # Load the podcast data
-podcast_data =  pd.read_csv(f"gs://spotify-podcast-cluster/cleaned_podcast_details.csv", storage_options={"token": credentials})
-print(podcast_data)
+podcast_data =  pd.read_csv(f"gs://spotify-podcast-cluster/data/cleaned_podcast_details_english_colors.csv", storage_options={"token": credentials})
 
 # Extract relevant fields and sort options
 podcast_options = sorted(
@@ -169,7 +168,7 @@ def update_podcast_details(selected_podcast):
             html.P(f"Publisher: {podcast['podcast_publisher']}", style={'color': '#B3B3B3'}),
             html.P(f"{podcast['podcast_description']}", style={'color': '#B3B3B3'}),
             html.P(f"Total Episodes: {podcast['podcast_total_episodes']}", style={'color': '#B3B3B3'}),
-            html.P(f"Category: {podcast['podcast_category']}", style={'color': '#B3B3B3'}),
+            html.P(f"Genre: {podcast['podcast_genre']}", style={'color': '#B3B3B3'}),
 
             # Add Word Cloud and Buttons
             html.Div(
@@ -189,7 +188,7 @@ def update_podcast_details(selected_podcast):
                         children=[
                             dcc.Link(
                                 "Listen on Spotify",
-                                href=podcast["podcast_external_url"],
+                                href=podcast["podcast_url"],
                                 target="_blank",
                                 style={
                                     'backgroundColor': '#1DB954',

@@ -83,7 +83,7 @@ def get_comprehensive_dominant_color(image_url):
     str: RGB color string or None if no suitable color found.
     """
     try:
-        response = requests.get(image_url, timeout=30)
+        response = requests.get(image_url, timeout=600)
         if response.status_code == 200:
             # Open image and convert to RGB
             image = Image.open(BytesIO(response.content)).convert('RGB')
@@ -163,6 +163,6 @@ def append_dominant_colors_to_csv(input_csv, output_csv):
     
 # Example usage
 if __name__ == "__main__":
-    input_csv = "data/cleaned_podcast_details.csv"
-    output_csv = "data/cleaned_podcast_details.csv"
+    input_csv = "podcast_details_english.csv"
+    output_csv = "podcast_details_english_colors.csv"
     append_dominant_colors_to_csv(input_csv, output_csv)
