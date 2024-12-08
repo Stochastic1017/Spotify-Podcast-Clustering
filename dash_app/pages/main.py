@@ -1,26 +1,16 @@
 
-from dash import html, dcc, Input, Output, callback
-from dotenv import load_dotenv
-import os
-import json
+from dash import html, dcc, callback, Output, Input
+from helpers.scatterplot import generate_plot
 import dash
 import pandas as pd
-from google.oauth2 import service_account
-from helpers.word_cloud import generate_word_cloud
 
-# Environment Variables
-load_dotenv()
-
-credentials_info = os.getenv("GOOGLE_AUTH")
-credentials = service_account.Credentials.from_service_account_info(json.loads(credentials_info),
-                                                                    scopes=['https://www.googleapis.com/auth/devstorage.read_write',
-                                                                            'https://www.googleapis.com/auth/cloud-platform',
-                                                                            'https://www.googleapis.com/auth/drive'])
-
+# Register the page with a custom path
 dash.register_page(__name__, path="/main")
 
 # Load the podcast data
-podcast_data =  pd.read_csv(f"gs://spotify-podcast-cluster/data/cleaned_podcast_details_english_colors.csv", storage_options={"token": credentials})
+podcast_data =  pd.read_csv(
+    "https://github.com/Stochastic1017/Spotify-Podcast-Clustering/raw/refs/heads/main/data/cleaned_podcast_details_english_colors.csv"
+)
 
 # Extract relevant fields and sort options
 podcast_options = sorted(
@@ -34,6 +24,7 @@ app_css = {
     'fontFamily': '"Circular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 }
 
+# Main Layout
 layout = html.Div(
     style={
         **app_css,
@@ -105,19 +96,46 @@ layout = html.Div(
                         'boxShadow': '0 10px 20px rgba(0,0,0,0.2)',
                     },
                 ),
+
+                # Scatter Plot Container with Tab Toggle for 2D/3D View
+                html.Div(
+                    id="scatter-plot-container",
+                    children=[
+                        html.Div(
+                            style={
+                                "color": "#282828",
+                                "width": "100%",
+                                "height": "100%",
+                                "textAlign": "center",
+                                "fontSize": "1.2rem",
+                                "marginTop": "50px"
+                            }
+                        )
+                    ],
+                    style={
+                        "flex": "1",
+                        "backgroundColor": "#282828",
+                        "borderRadius": "15px",
+                        "padding": "20px",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "alignItems": "center",
+                        "justifyContent": "flex-start",
+                        "boxShadow": "0 10px 20px rgba(0,0,0,0.2)",
+                    },
+                ),
+
             ]
         ),
     ]
 )
 
-# Callback to update podcast details and word cloud
 @callback(
     Output("podcast-details-container", "children"),
     Output("podcast-details-container", "style"),
     Input("podcast-dropdown", "value"),
 )
 def update_podcast_details(selected_podcast):
-    
     default_style = {
         'flexBasis': '20%',
         'maxWidth': '300px',
@@ -129,19 +147,22 @@ def update_podcast_details(selected_podcast):
         'border': '2px solid #282828',
         'transition': 'all 0.5s ease-in-out',
     }
-        
-    if not selected_podcast:
-        return html.Div(
-            "Select a podcast to view details.",
-            style={'color': '#B3B3B3', 'textAlign': 'center'}
-        ), default_style
     
+    if not selected_podcast:
+        return (
+            html.Div(
+                "Select a podcast to view details.",
+                style={'color': '#B3B3B3', 'textAlign': 'center'}
+            ),
+            default_style  # Return the default style
+        )
+
     # Fetch podcast details
     podcast = podcast_data[podcast_data["podcast_id"] == selected_podcast].iloc[0]
     dominant_color = podcast["podcast_dominant_color"]
 
-    # Generate word cloud
-    word_cloud_src = generate_word_cloud(selected_podcast)
+    # Generate word cloud image URL
+    word_cloud_src = f"https://raw.githubusercontent.com/Stochastic1017/Spotify-Podcast-Clustering/refs/heads/main/wordclouds/{podcast['podcast_id']}.png"
 
     # Podcast details content with word cloud and buttons
     details = html.Div(
@@ -202,22 +223,6 @@ def update_podcast_details(selected_podcast):
                                 },
                                 className='click-button'
                             ),
-                            html.Button(
-                                "+",
-                                id="add-to-plot",
-                                style={
-                                    'marginLeft': '10px',
-                                    'backgroundColor': '#1DB954',
-                                    'border': 'none',
-                                    'borderRadius': '25px',
-                                    'color': 'white',
-                                    'fontWeight': 'bold',
-                                    'padding': '10px 15px',
-                                    'cursor': 'pointer',
-                                    'transition': 'all 0.3s ease',
-                                },
-                                className="click-button"
-                            )
                         ],
                         style={
                             'display': 'flex',
@@ -245,3 +250,13 @@ def update_podcast_details(selected_podcast):
     }
 
     return details, container_style
+
+@callback(
+    Output("scatter-plot-container", "children"),
+    Input("podcast-dropdown", "value"),
+)
+def update_scatter_plot(selected_podcast_id):
+    if not selected_podcast_id:
+        return html.Div("Please select a podcast to view the scatter plot.")
+
+    return dcc.Graph(figure=generate_plot(selected_podcast_id))
