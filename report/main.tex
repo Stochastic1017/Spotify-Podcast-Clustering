@@ -1,0 +1,177 @@
+
+\documentclass{article}
+\usepackage[utf8]{inputenc} % Allow utf-8 input
+\usepackage[T1]{fontenc}    % Use 8-bit T1 fonts
+\usepackage{graphicx}       % Required for inserting images
+\usepackage{booktabs}       % Professional-quality tables
+\usepackage{amsfonts}       % Blackboard math symbols
+\usepackage{nicefrac}       % Compact symbols for 1/2, etc.
+\usepackage{microtype}      % Microtypography
+\usepackage{blkarray}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=red, filecolor=magenta, urlcolor=cyan]{hyperref} % Hyperlinks
+\usepackage{halloweenmath}
+\usepackage{subcaption}
+\usepackage{calrsfs}
+\usepackage{listings}
+\usepackage{authblk}
+\usepackage{ragged2e}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{dsfont}
+\usepackage{bbm}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{geometry}
+\usepackage{csquotes}
+
+
+% Define colors for Python syntax highlighting
+\definecolor{pythonblue}{RGB}{0,0,255}
+\definecolor{pythongreen}{RGB}{0,128,0}
+\definecolor{pythonpurple}{RGB}{128,0,128}
+\definecolor{pythongray}{RGB}{128,128,128}
+
+% Set up Python code style
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{pythonblue},
+    stringstyle=\color{pythongreen},
+    commentstyle=\color{pythongray},
+    emph={import,from,class,def,for,while,if,is,in,elif,else,return,try,except,finally},
+    emphstyle=\color{pythonpurple},
+    framesep=5pt,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\geometry{a4paper, top=0.5in, bottom=1in, left=1in, right=1in}
+
+\makeatletter
+\renewcommand{\maketitle}{
+    \begin{center}
+        \vspace{-2em} % Move the title closer to the top
+        {\LARGE \textbf{\@title} \par}
+        \vspace{1em} % Adjust spacing between title and author
+        {\@author \par}
+        \vspace{-1em} % Reduce spacing before content
+        \@date
+    \end{center}
+}
+\makeatother
+
+
+\usepackage{setspace}
+\setstretch{1.0}  % Adjust the number to reduce line spacing (1.0 is default)
+
+\setlength{\parskip}{1pt}
+
+\begin{document}
+\title{\textbf{Clustering Spotify Podcasts with NLP-Driven Insights}}
+\author{}
+\date{}
+
+\maketitle
+\pagenumbering{arabic} % Start normal page numbering
+
+\noindent \textbf{Data Collection using Spotify API}\\
+
+\noindent Using selenium and Spotify API:
+\begin{enumerate}
+    \item \href{https://github.com/Stochastic1017/Spotify-Podcast-Clustering/blob/main/spotify_api/fetch_top_podcast.py}{\texttt{fetch\_top\_podcast.py}}: scrape all top 50 podcasts from  \href{https://podcastcharts.byspotify.com/}{here} for each genre.
+    \item \href{https://github.com/Stochastic1017/Spotify-Podcast-Clustering/blob/main/spotify_api/fetch_podcast_details.py}{\texttt{fetch\_podcast\_details.py}}: retrieve metadata, filtered for english podcasts, resulting in 818 podcasts.
+    \item \href{https://github.com/Stochastic1017/Spotify-Podcast-Clustering/blob/main/spotify_api/fetch_episode_details.py}{\texttt{fetch\_episode\_details.py}}: scrape details for all episodes, giving us a total of 284,481 episodes.
+\end{enumerate}
+
+\noindent \textbf{Description cleanup and tokenization}\\
+
+\noindent The python library \texttt{nltk} (natural language toolkit) is used to clean and tokenize the episode descriptions. In summary, the following cleaning is done using \href{https://github.com/Stochastic1017/Spotify-Podcast-Clustering/blob/main/tokenization/clean_description.py}{\texttt{clean\_description.py}}:
+\begin{enumerate}
+    \item \textit{Text Normalization:} accent removal, lowercasing, whitespace normalization.
+    \item \textit{Sentence-Level Cleaning:} contraction expansion, URL removal, promotional density check.
+    \item \textit{Token-Level Cleaning:} lemmatization, stopword removal, promotional keyword removal, character validation, length check, dictionary validation, special character removal.
+\end{enumerate}
+
+\noindent \textbf{Computing metrics}\\
+
+\noindent The \href{https://github.com/Stochastic1017/Spotify-Podcast-Clustering/blob/main/models/compute_metrics.py}{compute\_metrics.py} script computes three metrics.
+
+\begin{enumerate}
+    \item \textit{Normalized Total Feature Similarity:} Measures cosine similarity between two frequency vectors.
+    $$\text{NTFS}(\bm{x},\bm{y}) = \frac{\langle \bm{x}, \bm{y}\rangle}{||\bm{x}||_{2}\;||\bm{y}||_{2}} \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{directional similarity between two podcasts}$$
+    \item \textit{Jaccard Token Similarity:} Compute metric signifying proportion of overlapping tokens.
+    $$\text{JTS}(\bm{x},\bm{y}) = \frac{\sum \text{min}(x_i, y_i)}{\sum \text{max}(x_i, y_i)} \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{shared content coverage between two podcasts}$$
+    \item \textit{Weighted Token Diversity Similarity:} Uses L1-normalized frequency vectors that emphasizing token diversity.
+    $$ \text{WTDS}(\bm{x},\bm{y}) = \sum_{i=1}^{n} \sqrt{ \frac{x_i}{||\bm{x}||_{1}} \cdot \frac{y_i}{||\bm{y}||_{1}} } \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{shared content diversity between two podcasts}$$
+\end{enumerate}
+
+
+\noindent \textbf{Recommendation system:}\\
+
+\noindent Suppose an arbitrary podcast $k$ is chosen, for which an $n$-recommendation needs to be generated from a list of $T$ podcasts. Consider a vector of the following form:
+\[
+\begin{blockarray}{cccccc}
+    & \text{podcast}_1 & \dots & \text{podcast}_k & \dots & \text{podcast}_T \\
+    \begin{block}{c(ccccc)}
+    \text{podcast}_k & \mathcal{S}_{k,1} & \dots & (1, 1, 1) & \dots & \mathcal{S}_{k,T} \\
+    \end{block}
+\end{blockarray}
+\]
+
+\noindent where, $\mathcal{S}_{i,j} = \big(\text{NTFS}(\bm{x_i}, \bm{x_j}), \text{JTS}(\bm{x_i}, \bm{x_j}), \text{WTDS}(\bm{x_i}, \bm{x_j}) \big)$. It is easy to see that if $i = j$, then $\mathcal{S}_{i,j} = (1,1,1)$.\\
+
+\noindent To quantify dissimilarity, we define the distance:
+$$ d_{ij} = ||(1,1,1) - \mathcal{S}_{ij}||_2 = \sqrt{\big(1 - \text{NTFS}(\bm{x_i}, \bm{x_j})\big)^2 + \big(1 - \text{JTS}(\bm{x_i}, \bm{x_j})\big)^2 + \big(1 - \text{WTDS}(\bm{x_i}, \bm{x_j})\big)^2}.$$
+
+\noindent Finally, we sort by distance (lowest to highest) and report the $n$-closest podcasts. Philosophically, our goal is to find podcasts that lie closest to the point $(1,1,1)$, which represents the maximum possible similarity in direction, shared content coverage, and diversity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
