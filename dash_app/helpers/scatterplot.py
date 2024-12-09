@@ -144,7 +144,7 @@ def generate_plot(selected_podcast_id):
             y=hull_points[:, 1],
             z=hull_points[:, 2],
             color='rgba(29, 185, 84, 0.3)',  # Spotify green with transparency
-            opacity=0.3,
+            opacity=0.5,
             name='Similarity Hull',
             showlegend=False,
             hoverinfo="none",  # Disable hover for this point
@@ -196,7 +196,7 @@ def generate_plot(selected_podcast_id):
         title="",
         template='plotly_dark',
         height=850,
-        width=1450,
+        width=1525,
         title_font_color='white',
         font_color='white',
         margin=dict(l=20, r=20, t=50, b=20),
