@@ -1,8 +1,14 @@
 
-from dash import html, dcc, callback, Output, Input
-from helpers.scatterplot import generate_plot
+import os
+import sys
 import dash
 import pandas as pd
+
+# Append current directory to system path for imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from dash import html, dcc, callback, Output, Input
+from helpers.scatterplot import generate_plot
 
 # Register the page with a custom path
 dash.register_page(__name__, path="/main")
