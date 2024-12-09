@@ -99,6 +99,7 @@ layout = html.Div(
                         'borderRadius': '15px',
                         'padding': '20px',
                         'overflowY': 'auto',
+                        'overflowX': 'auto',
                         'boxShadow': '0 10px 20px rgba(0,0,0,0.2)',
                     },
                 ),
