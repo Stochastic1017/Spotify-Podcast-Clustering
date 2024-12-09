@@ -97,7 +97,7 @@ layout = html.Div(
                         'maxWidth': '300px',
                         'backgroundColor': '#282828',
                         'borderRadius': '15px',
-                        'padding': '20px',
+                        'padding': '10px',
                         'overflowY': 'auto',
                         'overflowX': 'auto',
                         'boxShadow': '0 10px 20px rgba(0,0,0,0.2)',
@@ -117,16 +117,48 @@ layout = html.Div(
                     style={
                         "flex": "1",
                         "backgroundColor": "#282828",
-                        "borderRadius": "15px",
-                        "padding": "20px",
+                        "borderRadius": "10px",
+                        "padding": "10px",
                         "display": "flex",
                         "flexDirection": "column",
                         "alignItems": "center",
                         "justifyContent": "center",
+                        'overflowY': 'auto',
+                        'overflowX': 'auto',
                         "boxShadow": "0 10px 20px rgba(0,0,0,0.2)",
                         "position": "relative",
                     },
                 ),
+            ],
+        ),
+        # Footer Section
+        html.Footer(
+            id="footer-section",
+            style={
+                'backgroundColor': '#1E1E1E',
+                'padding': '10px',
+                'textAlign': 'center',
+                'color': '#B3B3B3',
+                'fontSize': '0.9rem',
+                'marginTop': 'auto',
+                'borderTop': '1px solid #282828',
+                'overflowY': 'auto',
+                'overflowX': 'auto',
+            },
+            children=[
+                html.P("Developed by Shrivats Sudhir | Contact: stochastic1017@gmail.com"),
+                html.P("© 2024 Spotify Podcast Clustering Project | All rights reserved."),
+                html.P(
+                    [
+                        "GitHub Repository: ",
+                        html.A(
+                            "Spotify Podcast Clustering",
+                            href="https://github.com/Stochastic1017/Spotify-Podcast-Clustering",
+                            target="_blank",
+                            style={'color': '#1DB954', 'textDecoration': 'none'}
+                        ),
+                    ]
+                )
             ],
         ),
     ],
@@ -196,40 +228,40 @@ def update_podcast_details(selected_podcast_id):
                     'boxShadow': '0 10px 20px rgba(0,0,0,0.3)',
                 },
             ),
-                                html.Div(
-                        children=[
-                            dcc.Link(
-                                "Listen on Spotify",
-                                href=podcast["podcast_url"],
-                                target="_blank",
-                                style={
-                                    'backgroundColor': '#1DB954',
-                                    'color': 'white',
-                                    'padding': '10px 20px',
-                                    'borderRadius': '25px',
-                                    'textDecoration': 'none',
-                                    'fontWeight': 'bold',
-                                    'transition': 'transform 0.2s',
-                                    'display': 'inline-block',
-                                },
-                                className='click-button'
-                            ),
-                        ],
+            html.Div(
+                children=[
+                    dcc.Link(
+                        "Listen on Spotify",
+                        href=podcast["podcast_url"],
+                        target="_blank",
                         style={
-                            'display': 'flex',
-                            'justifyContent': 'center',
-                            'gap': '10px',
-                            'marginTop': '20px',
-                        }
-                    )
+                            'backgroundColor': '#1DB954',
+                            'color': 'white',
+                            'padding': '10px 20px',
+                            'borderRadius': '25px',
+                            'textDecoration': 'none',
+                            'fontWeight': 'bold',
+                            'transition': 'transform 0.2s',
+                            'display': 'inline-block',
+                        },
+                        className='click-button'
+                    ),
                 ],
                 style={
                     'display': 'flex',
-                    'flexDirection': 'column',
-                    'alignItems': 'center',
-                    'textAlign': 'center',
+                    'justifyContent': 'center',
+                    'gap': '10px',
+                    'marginTop': '20px',
                 }
             )
+        ],
+        style={
+            'display': 'flex',
+            'flexDirection': 'column',
+            'alignItems': 'center',
+            'textAlign': 'center',
+        }
+    )
 
     updated_style = {**default_style, 'border': f"2px solid {dominant_color}"}
     return details, updated_style
