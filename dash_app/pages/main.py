@@ -242,7 +242,7 @@ def update_podcast_details(selected_podcast_id):
 def update_scatter_plot(selected_podcast_id):
     if not selected_podcast_id:
         return html.Div(
-            "Please select a podcast to view analytics and recommendations.",
+            "If plots or tables don't fit properly, press Ctrl - or Ctrl + to adjust the zoom level until the layout looks satisfactory.",
             style={'color': '#B3B3B3'}
         )
 
