@@ -46,7 +46,7 @@ Compute JTS metric signifying proportion of overlapping tokens.
 Uses L1-normalized frequency vectors that emphasizing token diversity.
 
 ```math
-\text{WTDS}(\mathbf{x},\mathbf{y}) = \sum_{i=1}^{n} \sqrt{ \frac{x_i}{||\mathbf{x}||_{1}} \cdot \frac{y_i}{||\mathbf{y}||_{1}} } \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{shared content diversity between two podcasts}
+\text{WTDS}(\mathbf{x},\mathbf{y}) = \sum_{i=1}^{n} \sqrt{ \frac{x_i}{\|\mathbf{x}\|_{1}} \cdot \frac{y_i}{\|\mathbf{y}\|_{1}} } \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{shared content diversity between two podcasts}
 ```
 
 ### Recommendation System
