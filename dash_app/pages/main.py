@@ -11,6 +11,11 @@ podcast_data = pd.read_csv(
     "https://github.com/Stochastic1017/Spotify-Podcast-Clustering/raw/refs/heads/main/data/cleaned_podcast_details_english_colors.csv"
 )
 
+# Exclude specific podcasts based on conditions
+excluded_podcast_ids = ["24PzTknDMWxNTA2KExjHi5", "3K0KOwZ9OiFML5E9P4dvEZ"]  # Replace with actual IDs
+podcast_data = podcast_data[~podcast_data["podcast_id"].isin(excluded_podcast_ids)]
+
+
 # Extract podcast options for dropdown
 podcast_options = sorted(
     [{"label": row["podcast_name"], "value": row["podcast_id"]}
