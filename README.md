@@ -71,7 +71,7 @@ where $\mathcal{S}_{i,j} = ( \text{NTFS}(\mathbf{x_i}, \mathbf{x_j}), \text{JTS}
 
 ### Recommendation System
 
-Suppose an arbitrary podcast $k$ is chosen, for which an $n$-recommendation needs to be generated from a list of $T$ podcasts. Consider a matrix of the following form:
+Suppose an arbitrary podcast $k$ is chosen, for which an $n$-recommendation needs to be generated from a list of $T$ podcasts. Suppose an arbitrary podcast $k$ is chosen, for which we want $n$-recommendations:
 
 ```math
 \begin{array}{cccccc}
