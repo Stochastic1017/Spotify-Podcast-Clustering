@@ -1,5 +1,11 @@
 # Clustering Spotify Podcasts with NLP-Driven Insights
 
+## Web-App Link
+
+The web-app link to interact with the spotify recommendation system can be found here:
+
+https://spotify-podcast-clustering.onrender.com
+
 ## Introduction
 
 Spotify has already developed several music-specific metrics/derived features about a particular track/music, specifically: (a) acousticness, (b) danceability, (c) energy, (d) instrumentalness, (e) speechiness, and (f) valence.
@@ -49,57 +55,35 @@ Uses L1-normalized frequency vectors that emphasizing token diversity.
 \text{WTDS}(\mathbf{x},\mathbf{y}) = \sum_{i=1}^{n} \sqrt{ \frac{x_i}{\|\mathbf{x}\|_{1}} \cdot \frac{y_i}{\|\mathbf{y}\|_{1}} } \in \mathbb{R}_{[0,1]}, \quad \longrightarrow \text{shared content diversity between two podcasts}
 ```
 
-Here is the python implementation for computing the above metrics:
+The resulting combined matrix (where each element in $\mathbb{R}^3_{[0,1]}$) is as follows:
 
-```python
-# Helper Functions
-def get_global_vocabulary(podcast_ids, folder="podcast_tokens"):
-    global_vocab = set()
-    n = len(podcast_ids)
-    for idx, podcast_id in enumerate(podcast_ids):
-        print(f"processing: {podcast_id}. At {idx} out of {n}")
-        file_path = os.path.join(folder, f"{podcast_id}.csv")
-        if os.path.exists(file_path):
-            word_counts = pd.read_csv(file_path)
-            global_vocab.update(word_counts["Word"])
-    return list(global_vocab)
-
-def get_token_frequency_vectors(podcast_ids, global_vocab, folder="podcast_tokens"):
-    vocab_index = {word: idx for idx, word in enumerate(global_vocab)}
-    vectors = []
-    n = len(podcast_ids)
-    for idx, podcast_id in enumerate(podcast_ids):
-        print(f"processing: {podcast_id}. At {idx} out of {n}")
-        file_path = os.path.join(folder, f"{podcast_id}.csv")
-        if os.path.exists(file_path):
-            word_counts = pd.read_csv(file_path)
-            freq_vector = np.zeros(len(global_vocab))
-            for _, row in word_counts.iterrows():
-                if row["Word"] in vocab_index:
-                    freq_vector[vocab_index[row["Word"]]] = row["Count"]
-            vectors.append(freq_vector)
-    return np.array(vectors)
-
-def compute_similarity_matrices(freq_vectors):
-    print("Computing NTFS ...")
-    ntfs_matrix = cosine_similarity(normalize(freq_vectors, norm='l2'))
-    print("Computing JTS ...")
-    jts_matrix = np.array([
-        [np.sum(np.minimum(freq_vectors[i], freq_vectors[j])) / np.sum(np.maximum(freq_vectors[i], freq_vectors[j])) if np.sum(np.maximum(freq_vectors[i], freq_vectors[j])) > 0 else 0
-         for j in range(len(freq_vectors))]
-        for i in range(len(freq_vectors))
-    ])
-    print("Computing WTDS ...")
-    wtds_matrix = np.array([
-        [np.sum(np.sqrt(normalize(freq_vectors[i:i+1], norm='l1') * normalize(freq_vectors[j:j+1], norm='l1'))) 
-         for j in range(len(freq_vectors))]
-        for i in range(len(freq_vectors))
-    ])
-    return ntfs_matrix, jts_matrix, wtds_matrix
+```math
+\begin{array}{cccccc}
+    & \text{podcast}_1 & \dots & \text{podcast}_k & \dots & \text{podcast}_T \\
+    \text{podcast}_1 & (1, 1, 1) & \dots & \mathcal{S}_{1,k} & \dots & \mathcal{S}_{1,T} \\
+    \text{podcast}_2 & \mathcal{S}_{2,1} & (1, 1, 1) & \dots & \dots & \mathcal{S}_{2,T} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+    \text{podcast}_T & \mathcal{S}_{T,1} & \mathcal{S}_{T,2} & \dots & \dots & (1, 1, 1) \\
+\end{array}
 ```
+
+where $\mathcal{S}_{i,j} = ( \text{NTFS}(\mathbf{x_i}, \mathbf{x_j}), \text{JTS}(\mathbf{x_i}, \mathbf{x_j}), \text{WTDS}(\mathbf{x_i}, \mathbf{x_j}) )$
 
 ### Recommendation System
 
 Suppose an arbitrary podcast $k$ is chosen, for which an $n$-recommendation needs to be generated from a list of $T$ podcasts. Consider a matrix of the following form:
 
+```math
+\begin{array}{cccccc}
+    & \text{podcast}_1 & \dots & \text{podcast}_k & \dots & \text{podcast}_T \\
+    & \mathcal{S}_{1,k}  & \dots & (1,1,1) & \dots & \mathcal{S}_{1,T} \\
+\end{array}
+```
 
+To quantify dissimilarity, we define the distance:
+
+```math
+d_{ij} = ||(1,1,1) - \mathcal{S}_{ij}||_2 = \sqrt{\big(1 - \text{NTFS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{JTS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{WTDS}(\mathbf{x_i}, \mathbf{x_j})\big)^2}
+```
+
+Finally, we sort by distance (lowest to highest) and report the $n$-closest podcasts. Philosophically, our goal is to find podcasts that lie closest to the point $(1,1,1)$, which represents the maximum possible similarity in direction, shared content coverage, and diversity.
