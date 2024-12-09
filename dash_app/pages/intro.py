@@ -1,4 +1,10 @@
 
+import os
+import sys
+
+# Append current directory to system path for imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from dash import html, dcc, Input, Output, callback
 import dash
 
