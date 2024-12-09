@@ -1,4 +1,11 @@
+
+import os
+import sys
 import dash
+
+# Append current directory to system path for imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from dash import dcc, html
 
 # Create the Dash app
