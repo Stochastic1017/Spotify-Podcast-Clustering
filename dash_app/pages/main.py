@@ -1,36 +1,30 @@
-
-import os
-import sys
-import dash
-import pandas as pd
-
-# Append current directory to system path for imports
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 from dash import html, dcc, callback, Output, Input
 from helpers.scatterplot import generate_plot
+import dash
+import pandas as pd
 
 # Register the page with a custom path
 dash.register_page(__name__, path="/main")
 
-# Load the podcast data
-podcast_data =  pd.read_csv(
+# Load podcast data
+podcast_data = pd.read_csv(
     "https://github.com/Stochastic1017/Spotify-Podcast-Clustering/raw/refs/heads/main/data/cleaned_podcast_details_english_colors.csv"
 )
 
-# Extract relevant fields and sort options
+# Extract podcast options for dropdown
 podcast_options = sorted(
-    [{"label": record["podcast_name"], "value": record["podcast_id"]} for record in podcast_data[["podcast_name", "podcast_id"]].to_dict(orient="records")],
+    [{"label": row["podcast_name"], "value": row["podcast_id"]}
+     for row in podcast_data[["podcast_name", "podcast_id"]].to_dict(orient="records")],
     key=lambda x: x["label"]
 )
 
-# Custom CSS for styling
+# CSS for consistent styling
 app_css = {
     'background': 'linear-gradient(135deg, #121212 0%, #1E1E1E 100%)',
     'fontFamily': '"Circular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
 }
 
-# Main Layout
+# Layout definition
 layout = html.Div(
     style={
         **app_css,
@@ -44,6 +38,7 @@ layout = html.Div(
     children=[
         # Header Section
         html.Div(
+            id="header-section",
             style={
                 'display': 'flex',
                 'alignItems': 'center',
@@ -59,9 +54,9 @@ layout = html.Div(
                     style={
                         'width': '250px',
                         'height': 'auto',
-                    }
+                    },
                 ),
-                # Podcast Dropdown
+                # Dropdown for podcast selection
                 dcc.Dropdown(
                     id="podcast-dropdown",
                     options=podcast_options,
@@ -77,11 +72,11 @@ layout = html.Div(
                     optionHeight=50,
                     className='custom-dropdown',
                 ),
-            ]
+            ],
         ),
-
-        # Main Content Area
+        # Main Content
         html.Div(
+            id="main-content",
             style={
                 'display': 'flex',
                 'flex': '1',
@@ -89,7 +84,7 @@ layout = html.Div(
                 'overflow': 'hidden',
             },
             children=[
-                # Podcast Details Container
+                # Podcast Details
                 html.Div(
                     id="podcast-details-container",
                     style={
@@ -102,20 +97,15 @@ layout = html.Div(
                         'boxShadow': '0 10px 20px rgba(0,0,0,0.2)',
                     },
                 ),
-
-                # Scatter Plot Container with Tab Toggle for 2D/3D View
+                # Scatter Plot with Loading Animation
                 html.Div(
                     id="scatter-plot-container",
                     children=[
-                        html.Div(
-                            style={
-                                "color": "#282828",
-                                "width": "100%",
-                                "height": "100%",
-                                "textAlign": "center",
-                                "fontSize": "1.2rem",
-                                "marginTop": "50px"
-                            }
+                        dcc.Loading(
+                            id="loading-scatter-plot",
+                            type="default",
+                            color="#1DB954",
+                            children=html.Div(id="scatter-plot-content"),
                         )
                     ],
                     style={
@@ -126,22 +116,24 @@ layout = html.Div(
                         "display": "flex",
                         "flexDirection": "column",
                         "alignItems": "center",
-                        "justifyContent": "flex-start",
+                        "justifyContent": "center",
                         "boxShadow": "0 10px 20px rgba(0,0,0,0.2)",
+                        "position": "relative",
                     },
                 ),
-
-            ]
+            ],
         ),
-    ]
+    ],
 )
 
+# Callback to update podcast details
 @callback(
     Output("podcast-details-container", "children"),
     Output("podcast-details-container", "style"),
     Input("podcast-dropdown", "value"),
 )
-def update_podcast_details(selected_podcast):
+def update_podcast_details(selected_podcast_id):
+    # Default style
     default_style = {
         'flexBasis': '20%',
         'maxWidth': '300px',
@@ -153,24 +145,16 @@ def update_podcast_details(selected_podcast):
         'border': '2px solid #282828',
         'transition': 'all 0.5s ease-in-out',
     }
-    
-    if not selected_podcast:
-        return (
-            html.Div(
-                "Select a podcast to view details.",
-                style={'color': '#B3B3B3', 'textAlign': 'center'}
-            ),
-            default_style  # Return the default style
-        )
 
-    # Fetch podcast details
-    podcast = podcast_data[podcast_data["podcast_id"] == selected_podcast].iloc[0]
+    if not selected_podcast_id:
+        return html.Div(
+        ), default_style
+
+    # Fetch details for selected podcast
+    podcast = podcast_data[podcast_data["podcast_id"] == selected_podcast_id].iloc[0]
     dominant_color = podcast["podcast_dominant_color"]
-
-    # Generate word cloud image URL
     word_cloud_src = f"https://raw.githubusercontent.com/Stochastic1017/Spotify-Podcast-Clustering/refs/heads/main/wordclouds/{podcast['podcast_id']}.png"
 
-    # Podcast details content with word cloud and buttons
     details = html.Div(
         children=[
             html.Img(
@@ -196,22 +180,17 @@ def update_podcast_details(selected_podcast):
             html.P(f"{podcast['podcast_description']}", style={'color': '#B3B3B3'}),
             html.P(f"Total Episodes: {podcast['podcast_total_episodes']}", style={'color': '#B3B3B3'}),
             html.P(f"Genre: {podcast['podcast_genre']}", style={'color': '#B3B3B3'}),
-
-            # Add Word Cloud and Buttons
-            html.Div(
-                children=[
-                    html.Img(
-                        src=word_cloud_src,
-                        alt="Word Cloud",
-                        style={
-                            'width': '100%',
-                            'height': 'auto',
-                            'marginTop': '20px',
-                            'borderRadius': '15px',
-                            'boxShadow': '0 10px 20px rgba(0,0,0,0.3)',
-                        }
-                    ),
-                    html.Div(
+            html.Img(
+                src=word_cloud_src,
+                alt="Word Cloud",
+                style={
+                    'width': '100%',
+                    'marginTop': '20px',
+                    'borderRadius': '15px',
+                    'boxShadow': '0 10px 20px rgba(0,0,0,0.3)',
+                },
+            ),
+                                html.Div(
                         children=[
                             dcc.Link(
                                 "Listen on Spotify",
@@ -245,24 +224,20 @@ def update_podcast_details(selected_podcast):
                     'textAlign': 'center',
                 }
             )
-        ],
-        style={'textAlign': 'center'}
-    )
 
-    # Update container style with dynamic border and box shadow
-    container_style = {
-        **default_style,
-        'border': f"2px solid {dominant_color}",
-    }
+    updated_style = {**default_style, 'border': f"2px solid {dominant_color}"}
+    return details, updated_style
 
-    return details, container_style
-
+# Callback to update scatter plot
 @callback(
-    Output("scatter-plot-container", "children"),
+    Output("scatter-plot-content", "children"),
     Input("podcast-dropdown", "value"),
 )
 def update_scatter_plot(selected_podcast_id):
     if not selected_podcast_id:
-        return
+        return html.Div(
+            "Please select a podcast to view analytics and recommendations.",
+            style={'color': '#B3B3B3'}
+        )
 
     return dcc.Graph(figure=generate_plot(selected_podcast_id))
