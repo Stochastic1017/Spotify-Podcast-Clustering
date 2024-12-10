@@ -6,7 +6,9 @@ The web-app link to interact with the spotify recommendation system can be found
 
 https://spotify-podcast-clustering.onrender.com
 
-Note: The intro animation is taken from: https://www.youtube.com/watch?v=cB8JW-uLuC4.
+Note: The intro animation is taken from: https://www.youtube.com/watch?v=cB8JW-uLuC4. 
+
+If plots or tables don't fit properly, press Ctrl - or Ctrl + to adjust the zoom level until the layout looks satisfactory.
 
 ## Introduction
 
