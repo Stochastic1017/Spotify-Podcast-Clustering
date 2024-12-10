@@ -162,7 +162,7 @@ layout = html.Div(
                     [
                         "Introduction Spotify Animation: ",
                         html.A(
-                            "Logo Animation】ポヨンポヨンとスポティファイ【Spotify】",
+                            "【Logo Animation】ポヨンポヨンとスポティファイ【Spotify】",
                             href="https://www.youtube.com/watch?v=cB8JW-uLuC4",
                             target="_blank",
                             style={'color': '#1DB954', 'textDecoration': 'none'}
