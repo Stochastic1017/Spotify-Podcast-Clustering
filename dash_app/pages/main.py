@@ -147,7 +147,6 @@ layout = html.Div(
             },
             children=[
                 html.P("Developed by Shrivats Sudhir | Contact: stochastic1017@gmail.com"),
-                html.P("© 2024 Spotify Podcast Clustering Project | All rights reserved."),
                 html.P(
                     [
                         "GitHub Repository: ",
