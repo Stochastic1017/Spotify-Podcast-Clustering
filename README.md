@@ -2,13 +2,13 @@
 
 ## Web-App Link
 
-The web-app link to interact with the spotify recommendation system can be found here:
-
-https://spotify-podcast-clustering.onrender.com
+The web-app link to interact with the spotify recommendation system can be found here: https://spotify-podcast-clustering.onrender.com
 
 Note: The intro animation is taken from: https://www.youtube.com/watch?v=cB8JW-uLuC4. 
 
 If plots or tables don't fit properly, press Ctrl - or Ctrl + to adjust the zoom level until the layout looks satisfactory.
+
+Here is a short video to showcase the web-app:
 
 https://github.com/user-attachments/assets/28672852-8fa0-4f2c-95a7-a28619bbca73
 
