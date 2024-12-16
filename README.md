@@ -10,6 +10,8 @@ Note: The intro animation is taken from: https://www.youtube.com/watch?v=cB8JW-u
 
 If plots or tables don't fit properly, press Ctrl - or Ctrl + to adjust the zoom level until the layout looks satisfactory.
 
+https://github.com/user-attachments/assets/28672852-8fa0-4f2c-95a7-a28619bbca73
+
 ## Introduction
 
 Spotify has already developed several music-specific metrics/derived features about a particular track/music, specifically: (a) acousticness, (b) danceability, (c) energy, (d) instrumentalness, (e) speechiness, and (f) valence.
