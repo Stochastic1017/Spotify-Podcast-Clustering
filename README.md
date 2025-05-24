@@ -76,7 +76,7 @@ The resulting combined matrix (where each element in $\mathbb{R}^3_{[0,1]}$) is 
     & \text{podcast}_1 & \dots & \text{podcast}_k & \dots & \text{podcast}_T \\
     \text{podcast}_1 & (1, 1, 1) & \dots & \mathcal{S}_{1,k} & \dots & \mathcal{S}_{1,T} \\
     \text{podcast}_2 & \mathcal{S}_{2,1} & (1, 1, 1) & \dots & \dots & \mathcal{S}_{2,T} \\
-    \vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+    \vdots & \vdots & \vdots & \dots & \vdots & \vdots \\
     \text{podcast}_T & \mathcal{S}_{T,1} & \mathcal{S}_{T,2} & \dots & \dots & (1, 1, 1) \\
 \end{array}
 ```
