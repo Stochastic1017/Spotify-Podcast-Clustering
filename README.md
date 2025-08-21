@@ -82,7 +82,7 @@ The resulting combined matrix (where each element in $\mathbb{R}^3_{[0,1]}$) is 
 \end{array}
 ```
 
-where $\mathcal{S}_{i,j} = ( \text{NTFS}(\mathbf{x_i}, \mathbf{x_j}), \text{JTS}(\mathbf{x_i}, \mathbf{x_j}), \text{WTDS}(\mathbf{x_i}, \mathbf{x_j}) )$
+where $\mathcal{S}_{i,j} = \bigg[ \text{NTFS}(\mathbf{x_i}, \mathbf{x_j}), \text{JTS}(\mathbf{x_i}, \mathbf{x_j}), \text{WTDS}(\mathbf{x_i}, \mathbf{x_j}) \bigg]$
 
 ### Recommendation System
 
@@ -98,7 +98,7 @@ Suppose an arbitrary podcast $k$ is chosen, for which an $n$-recommendation need
 Next, we quantify dissimilarity by computing the euclidean 2-norm distance with respect to podcast $k$:
 
 ```math
-d_{ij} = ||(1,1,1) - \mathcal{S}_{ij}||_2 = \sqrt{\big(1 - \text{NTFS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{JTS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{WTDS}(\mathbf{x_i}, \mathbf{x_j})\big)^2}
+d_{ij} = | \; (1,1,1) - \mathcal{S}_{ij} \; |_2 = \sqrt{\big(1 - \text{NTFS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{JTS}(\mathbf{x_i}, \mathbf{x_j})\big)^2 + \big(1 - \text{WTDS}(\mathbf{x_i}, \mathbf{x_j})\big)^2}
 ```
 
 Finally, we sort by distance (lowest to highest) and report the $n$-closest podcasts. Each reported podcast represents those whose description match most closely in direction, shared content coverage, and diversity of content to podcast $k$, ensuring tailored recommendations for enhancing user engagement.
